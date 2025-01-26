@@ -12,9 +12,10 @@ function App() {
     const [debounceSearch, setDebounceSearch] = useState("")
     const [error, setError] = useState(null)
     const [results, setResults] = useState([])
+    const [trending, setTrending] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
-    useDebounce(() => setDebounceSearch(search), 500 ,[search])
+    useDebounce(() => setDebounceSearch(search), 500, [search])
 
 
     const apikey = import.meta.env.VITE_API_KEY
@@ -27,7 +28,9 @@ function App() {
     }
     const list = `${import.meta.env.API_BASE_URL}/cards`
 
+    const fetchTrending = async () => {
 
+    }
     const fetchData = async (query = "") => {
         try {
             let url
@@ -54,7 +57,7 @@ function App() {
             setResults([])
 
         } catch (e) {
-            setError(e.message)
+            // setError(e.message)
         } finally {
             setIsLoading(false)
         }
