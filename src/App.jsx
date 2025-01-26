@@ -2,14 +2,20 @@ import './App.css'
 import {CardWrapper} from "./components/CardWrapper.jsx";
 import Search from "./components/Search.jsx";
 import {useState, useEffect} from "react";
+import {useDebounce} from "react-use";
 import Spinner from "./components/Spinner.jsx";
+import {Card} from "./components/Card.jsx";
 
 function App() {
 
     const [search, setSearch] = useState("")
+    const [debounceSearch, setDebounceSearch] = useState("")
     const [error, setError] = useState(null)
     const [results, setResults] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+
+    useDebounce(() => setDebounceSearch(search), 500 ,[search])
+
 
     const apikey = import.meta.env.VITE_API_KEY
     const options = {
@@ -19,10 +25,19 @@ function App() {
             "X-API-Key": apikey
         }
     }
-    const url = `${import.meta.env.API_BASE_URL}/cards`
+    const list = `${import.meta.env.API_BASE_URL}/cards`
 
-    const fetchData = async () => {
+
+    const fetchData = async (query = "") => {
         try {
+            let url
+            if (query) {
+                url = `${import.meta.env.API_BASE_URL}/someendpoint?query=${encodeURIComponent(query)}`
+            } else {
+                url = list
+            }
+
+
             setIsLoading(true)
             const response = await fetch(url, options)
 
@@ -46,8 +61,8 @@ function App() {
     }
 
     useEffect(() => {
-        fetchData()
-    }, []);
+        fetchData(search)
+    }, [search]);
 
     return (
         <main>
@@ -72,7 +87,7 @@ function App() {
                     {
                         isLoading ?
                             (<div className={'text-white'}>
-                               <Spinner />
+                                <Spinner/>
                             </div>) :
                             error ? (
                                 <div className={'text-red-500'}>
@@ -81,6 +96,7 @@ function App() {
                             ) : (
                                 <ul>
                                     list of Resuls....
+                                    <Card title={"dummy title"} description={"desc"}/>
                                 </ul>
                             )
                     }
