@@ -2,6 +2,7 @@ import './App.css'
 import {CardWrapper} from "./components/CardWrapper.jsx";
 import Search from "./components/Search.jsx";
 import {useState, useEffect} from "react";
+import Spinner from "./components/Spinner.jsx";
 
 function App() {
 
@@ -35,10 +36,10 @@ function App() {
                 setIsLoading(false)
                 return
             }
-            setResults(data?.results)
+            setResults([])
 
         } catch (e) {
-            setError(e)
+            setError(e.message)
         } finally {
             setIsLoading(false)
         }
@@ -71,7 +72,7 @@ function App() {
                     {
                         isLoading ?
                             (<div className={'text-white'}>
-                                Loading...
+                               <Spinner />
                             </div>) :
                             error ? (
                                 <div className={'text-red-500'}>
